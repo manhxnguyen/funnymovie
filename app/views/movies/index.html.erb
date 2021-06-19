@@ -1,0 +1,74 @@
+<% if user_signed_in? %>
+  <div class="container mb-3">
+    <div class="dropdown text-end">
+      <%= link_to 'Share Movie', new_movie_path, class: 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>
+<div class="album py-3 bg-light">
+  <div class="container">
+    <% if @movies.present? %>
+      <% @movies.each do |m| %>
+        <div class="row my-5">
+          <div class="col-12 col-sm-6 col-md-6">
+            <div class="card shadow-sm">
+              <% if m.youtube_id.present? %>
+                <iframe width="auto" height="315" src="https://www.youtube.com/embed/<%= m.youtube_id %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <% else %>
+                <svg class="bd-placeholder-img card-img-top" width="100%" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="45%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+              <% end %>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-6">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <p class="card-text text-start text-capitalize text-danger"><%= m.title %></p>
+                <p class="card-text text-start">
+                  <%= "Shared by #{m.user&.username}" %>
+                  <% reactioned = m.reactions.who_voted(current_user&.id) %>
+                  <% if reactioned.present? %>
+                    <% if reactioned.first.vote? %>
+                      <span class="ms-2"><i class="fas fa-thumbs-up fa-3x"></i></span>
+                    <% else %>
+                      <span class="ms-2"><i class="fas fa-thumbs-down fa-3x"></i></span>
+                    <% end %>
+                  <% else %>
+                    <span>
+                    <%= link_to vote_movie_movie_path(id: m.id, type: :vote),
+                                method: :post,
+                                data: {
+                                  confirm: 'Are you sure?'
+                                },
+                                class: "btn #{'d-none' unless user_signed_in? }",
+                                remote: true do %>
+                      <i class="far fa-thumbs-up ps-1 fa-2x"></i>
+                    <% end %>
+                  </span>
+                    <span class="ps-3">
+                    <%= link_to unvote_movie_movie_path(id: m.id, type: :unvote),
+                                method: :post,
+                                data: {
+                                  confirm: 'Are you sure?'
+                                },
+                                class: "btn #{'d-none' unless user_signed_in? }",
+                                remote: true do %>
+                      <i class="far fa-thumbs-down ps-1 fa-2x"></i>
+                    <% end %>
+                  </span>
+                  <% end %>
+                </p>
+                <p>
+                  <span><%= m.votes.to_i %><i class="far fa-thumbs-up ps-1"></i></span>
+                  <span class="ps-3"><%=  m.unvotes.to_i %><i class="far fa-thumbs-down ps-1"></i></span>
+                </p>
+                <p class="card-text text-start text-capitalize">description:</p>
+                <p class="card-text text-start text-break"><strong><%= m.description %></strong></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+    <% end %>
+  </div>
+</div>

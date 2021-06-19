@@ -1,10 +1,28 @@
-<nav class="navbar navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand">Funnymovie</a>
-    <form class="d-flex">
-      <input class="form-control me-2" type="text" placeholder="username" aria-label="Search">
-      <input class="form-control me-2" type="password" placeholder="password" aria-label="Search">
-      <button class="btn btn-outline-success" type="submit">Login/Register</button>
-    </form>
+<header class="p-3 mb-3 border-bottom">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li class="nav-item"><%= link_to "Funnymovie", root_path, class: "nav-link" %></li>
+      </ul>
+
+<!--      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">-->
+<!--        <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">-->
+<!--      </form>-->
+      <% if user_signed_in? %>
+        <div class="dropdown text-end">
+          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="text-success me-2"><%= "Welcome, #{current_user.username}" %></span><img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+          </a>
+          <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+            <li><%= link_to "Sign out", destroy_user_session_path, class: 'text-danger dropdown-item', method: :delete %></li>
+          </ul>
+        </div>
+      <% else %>
+        <div class="text-end">
+          <%= link_to "Login", new_user_session_path, type: "button", class: "btn btn-outline-primary me-2" %>
+          <%= link_to "Register", new_user_registration_path, type: "button", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
   </div>
-</nav>
+</header>
